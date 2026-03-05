@@ -10,7 +10,16 @@ namespace BJ_projektT3A
         int RealnaHodnotaHrace = 0;
         int RealnaHodnotaDealera = 0;
         int kartaH1Hit = 0;
-        int pocetEs = 0;
+        int kartaD1Hit = 0;
+        int pocetEsH = 0;
+        int pocetEsD = 0;
+
+        int kartaD1 = 0;
+        int kartaD2 = 0;
+        int kartaH1 = 0;
+        int kartaH2 = 0;
+
+        string win = "";
         public Form1()
         {
             InitializeComponent();
@@ -29,43 +38,56 @@ namespace BJ_projektT3A
             }
             return cisloKarty + 1;
         }
-
-        private void AceCheck()
+        private int AceCheck(int soucet, ref int pocetEs)
         {
-            if (RealnaHodnotaHrace > 21 && pocetEs > 0)
+            if (soucet > 21 && pocetEs > 0)
             {
-                RealnaHodnotaHrace -= 10;
                 pocetEs--;
+                return soucet - 10;
             }
+            else
+            {
+                return soucet;
+            }
+        }
+        private string WinCheck(int CelkovySoucetHrace, int CelkovySoucetDealera)
+        {
+            if (CelkovySoucetDealera > 21) return "Dealer prohr·l (bust)";
+
+            if (CelkovySoucetDealera > CelkovySoucetHrace) return "Dealer vyhr·l!";
+            else if (CelkovySoucetDealera < CelkovySoucetHrace) return "Hr·Ë vyhr·l!";
+
+            else if (CelkovySoucetDealera == CelkovySoucetHrace) return "RemÌza";
+
+            else return "Chyba";
         }
 
 
         private void Start_Click(object sender, EventArgs e)
         {
-            int kartaD1 = rng.Next(13); // 0 = A; 2-10 = 1-9; 10 = J; 11 = Q; 12 = K
-            int kartaD2 = rng.Next(13);
-            int kartaH1 = rng.Next(13);
-            int kartaH2 = rng.Next(13);
+            kartaD1 = rng.Next(13); // 0 = A; 2-10 = 1-9; 10 = J; 11 = Q; 12 = K
+            kartaD2 = rng.Next(13);
+            kartaH1 = rng.Next(13);
+            kartaH2 = rng.Next(13);
             KartyD.Text = karty[kartaD1];
             KartyH.Text = karty[kartaH1] + " " + karty[kartaH2];
 
-            pocetEs = 0;
+            pocetEsH = 0;
+            pocetEsD = 0;
 
-            if (kartaH1 == 0) pocetEs++;
-            if (kartaH2 == 0) pocetEs++;
-
+            if (kartaH1 == 0) pocetEsH++;
+            if (kartaH2 == 0) pocetEsH++;
+            if (kartaD1 == 0) pocetEsD++;
+            if (kartaD2 == 0) pocetEsD++;
 
             RealnaHodnotaHrace = 0;
             RealnaHodnotaDealera = 0;
 
 
-            RealnaHodnotaHrace = RealnaHodnotaKaret(kartaH1) + RealnaHodnotaKaret(kartaH2);
-            RealnaHodnotaDealera = RealnaHodnotaKaret(kartaD1) + RealnaHodnotaKaret(kartaD2);
+            RealnaHodnotaHrace = AceCheck(RealnaHodnotaKaret(kartaH1) + RealnaHodnotaKaret(kartaH2), ref pocetEsH);
+            RealnaHodnotaDealera = AceCheck(RealnaHodnotaKaret(kartaD1) + RealnaHodnotaKaret(kartaD2), ref pocetEsD);
 
-            AceCheck();
-
-            MessageBox.Show("RealnaHodnotaHrace=" + RealnaHodnotaHrace);
-            MessageBox.Show("RealnaHodnotaDealera=" + RealnaHodnotaDealera);
+            if (RealnaHodnotaHrace == 21 || RealnaHodnotaDealera == 21) Stand.PerformClick();
 
         }
 
@@ -78,10 +100,40 @@ namespace BJ_projektT3A
 
             RealnaHodnotaHrace += RealnaHodnotaKaret(kartaH1Hit);
 
-            AceCheck();
+            if (kartaH1Hit == 0) pocetEsH++;
 
-            MessageBox.Show("RealnaHodnotaHrace=" + RealnaHodnotaHrace);
+            RealnaHodnotaHrace = AceCheck(RealnaHodnotaHrace, ref pocetEsH);
 
+            if (RealnaHodnotaHrace > 21) MessageBox.Show("Hr·Ë prohr·l (Bust)");
+        }
+
+        private void Stand_Click(object sender, EventArgs e)
+        {
+            KartyD.Text += " " + karty[kartaD2];
+
+            while (RealnaHodnotaDealera < 17)
+            {
+                kartaD1Hit = 0;
+                kartaD1Hit = rng.Next(13);
+
+                KartyD.Text += " " + karty[kartaD1Hit];
+
+                RealnaHodnotaDealera += RealnaHodnotaKaret(kartaD1Hit);
+
+                if (kartaH1Hit == 0) pocetEsD++;
+
+                RealnaHodnotaDealera = AceCheck(RealnaHodnotaDealera, ref pocetEsD);
+
+                MessageBox.Show("RealnaHodnotaDealera=" + RealnaHodnotaDealera);
+
+            }
+
+            MessageBox.Show(WinCheck(RealnaHodnotaHrace, RealnaHodnotaDealera));
+        }
+
+        private void Stop_Click(object sender, EventArgs e)
+        {
+            Application.Exit();
         }
     }
 }

@@ -33,6 +33,7 @@
             KartyD = new Label();
             KartyH = new Label();
             Start = new Button();
+            Stop = new Button();
             SuspendLayout();
             // 
             // Hit
@@ -53,6 +54,7 @@
             Stand.TabIndex = 2;
             Stand.Text = "Stand";
             Stand.UseVisualStyleBackColor = true;
+            Stand.Click += Stand_Click;
             // 
             // KartyD
             // 
@@ -82,11 +84,22 @@
             Start.UseVisualStyleBackColor = true;
             Start.Click += Start_Click;
             // 
+            // Stop
+            // 
+            Stop.Location = new Point(639, 335);
+            Stop.Name = "Stop";
+            Stop.Size = new Size(67, 49);
+            Stop.TabIndex = 6;
+            Stop.Text = "Stop";
+            Stop.UseVisualStyleBackColor = true;
+            Stop.Click += Stop_Click;
+            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(800, 450);
+            Controls.Add(Stop);
             Controls.Add(Start);
             Controls.Add(KartyH);
             Controls.Add(KartyD);
@@ -105,5 +118,6 @@
         private Label KartyD;
         private Label KartyH;
         private Button Start;
+        private Button Stop;
     }
 }
