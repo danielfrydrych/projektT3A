@@ -34,11 +34,15 @@
             KartyH = new Label();
             Start = new Button();
             Stop = new Button();
+            Sazka = new Label();
+            Sazkaplus10 = new Button();
+            Sazkaminus10 = new Button();
+            StavPenez = new Label();
             SuspendLayout();
             // 
             // Hit
             // 
-            Hit.Location = new Point(275, 335);
+            Hit.Location = new Point(277, 207);
             Hit.Name = "Hit";
             Hit.Size = new Size(67, 49);
             Hit.TabIndex = 0;
@@ -48,7 +52,7 @@
             // 
             // Stand
             // 
-            Stand.Location = new Point(380, 335);
+            Stand.Location = new Point(400, 207);
             Stand.Name = "Stand";
             Stand.Size = new Size(67, 49);
             Stand.TabIndex = 2;
@@ -59,7 +63,7 @@
             // KartyD
             // 
             KartyD.AutoSize = true;
-            KartyD.Location = new Point(357, 88);
+            KartyD.Location = new Point(357, 40);
             KartyD.Name = "KartyD";
             KartyD.Size = new Size(13, 15);
             KartyD.TabIndex = 3;
@@ -68,7 +72,7 @@
             // KartyH
             // 
             KartyH.AutoSize = true;
-            KartyH.Location = new Point(357, 205);
+            KartyH.Location = new Point(357, 116);
             KartyH.Name = "KartyH";
             KartyH.Size = new Size(13, 15);
             KartyH.TabIndex = 4;
@@ -76,7 +80,7 @@
             // 
             // Start
             // 
-            Start.Location = new Point(44, 335);
+            Start.Location = new Point(21, 372);
             Start.Name = "Start";
             Start.Size = new Size(67, 49);
             Start.TabIndex = 5;
@@ -86,7 +90,7 @@
             // 
             // Stop
             // 
-            Stop.Location = new Point(639, 335);
+            Stop.Location = new Point(704, 372);
             Stop.Name = "Stop";
             Stop.Size = new Size(67, 49);
             Stop.TabIndex = 6;
@@ -94,11 +98,53 @@
             Stop.UseVisualStyleBackColor = true;
             Stop.Click += Stop_Click;
             // 
+            // Sazka
+            // 
+            Sazka.AutoSize = true;
+            Sazka.Location = new Point(357, 162);
+            Sazka.Name = "Sazka";
+            Sazka.Size = new Size(13, 15);
+            Sazka.TabIndex = 7;
+            Sazka.Text = "0";
+            // 
+            // Sazkaplus10
+            // 
+            Sazkaplus10.Location = new Point(277, 372);
+            Sazkaplus10.Name = "Sazkaplus10";
+            Sazkaplus10.Size = new Size(67, 49);
+            Sazkaplus10.TabIndex = 8;
+            Sazkaplus10.Text = "+10";
+            Sazkaplus10.UseVisualStyleBackColor = true;
+            Sazkaplus10.Click += Sazkaplus10_Click;
+            // 
+            // Sazkaminus10
+            // 
+            Sazkaminus10.Location = new Point(400, 372);
+            Sazkaminus10.Name = "Sazkaminus10";
+            Sazkaminus10.Size = new Size(67, 49);
+            Sazkaminus10.TabIndex = 9;
+            Sazkaminus10.Text = "-10";
+            Sazkaminus10.UseVisualStyleBackColor = true;
+            Sazkaminus10.Click += Sazkaminus10_Click;
+            // 
+            // StavPenez
+            // 
+            StavPenez.AutoSize = true;
+            StavPenez.Location = new Point(12, 9);
+            StavPenez.Name = "StavPenez";
+            StavPenez.Size = new Size(31, 15);
+            StavPenez.TabIndex = 10;
+            StavPenez.Text = "1000";
+            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(800, 450);
+            Controls.Add(StavPenez);
+            Controls.Add(Sazkaminus10);
+            Controls.Add(Sazkaplus10);
+            Controls.Add(Sazka);
             Controls.Add(Stop);
             Controls.Add(Start);
             Controls.Add(KartyH);
@@ -119,5 +165,9 @@
         private Label KartyH;
         private Button Start;
         private Button Stop;
+        private Label Sazka;
+        private Button Sazkaplus10;
+        private Button Sazkaminus10;
+        private Label StavPenez;
     }
 }

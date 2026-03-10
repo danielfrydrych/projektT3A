@@ -23,6 +23,8 @@ namespace BJ_projektT3A
         public Form1()
         {
             InitializeComponent();
+            Hit.Enabled = false;
+            Stand.Enabled = false;
         }
 
 
@@ -88,11 +90,12 @@ namespace BJ_projektT3A
             RealnaHodnotaDealera = AceCheck(RealnaHodnotaKaret(kartaD1) + RealnaHodnotaKaret(kartaD2), ref pocetEsD);
 
             if (RealnaHodnotaHrace == 21 || RealnaHodnotaDealera == 21) Stand.PerformClick();
-
+            else { Hit.Enabled = true; Stand.Enabled = true; }
         }
 
         private void Hit_Click(object sender, EventArgs e)
         {
+
             kartaH1Hit = 0;
             kartaH1Hit = rng.Next(13);
 
@@ -129,11 +132,48 @@ namespace BJ_projektT3A
             }
 
             MessageBox.Show(WinCheck(RealnaHodnotaHrace, RealnaHodnotaDealera));
+            Hit.Enabled = false;
+            Stand.Enabled = false;
         }
 
         private void Stop_Click(object sender, EventArgs e)
         {
             Application.Exit();
+        }
+
+        int penize = 1000;
+        int VsazenePenize = 0;
+        private void Sazkaplus10_Click(object sender, EventArgs e)
+        {
+            if(penize > 0)
+            {
+                penize -= 10;
+                StavPenez.Text = penize.ToString();
+
+                VsazenePenize += 10;
+                Sazka.Text = VsazenePenize.ToString();
+            }
+            else
+            {
+                MessageBox.Show("Nedostatek financi");
+            }
+
+        }
+
+        private void Sazkaminus10_Click(object sender, EventArgs e)
+        {
+            if (VsazenePenize > 0)
+            {
+                penize += 10;
+                StavPenez.Text = penize.ToString();
+
+                VsazenePenize -= 10;
+                Sazka.Text = VsazenePenize.ToString();
+            }
+            else
+            {
+                MessageBox.Show("Vsazeno 0");
+            }
         }
     }
 }
