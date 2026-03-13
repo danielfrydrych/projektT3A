@@ -19,7 +19,10 @@ namespace BJ_projektT3A
         int kartaH1 = 0;
         int kartaH2 = 0;
 
-        string win = "";
+        int penize = 1000;
+        int VsazenePenize = 0;
+
+        char win = ' '; // Y = Yes (1:1), N = No (ztráta), B = BJ (3:2), P = Push (Vracení sázky)
         public Form1()
         {
             InitializeComponent();
@@ -54,19 +57,65 @@ namespace BJ_projektT3A
         }
         private string WinCheck(int CelkovySoucetHrace, int CelkovySoucetDealera)
         {
-            if (CelkovySoucetDealera > 21) return "Dealer prohrál (bust)";
+            if (CelkovySoucetDealera > 21) {win = 'Y'; return "Dealer prohrál (bust)"; }
 
-            if (CelkovySoucetDealera > CelkovySoucetHrace) return "Dealer vyhrál!";
-            else if (CelkovySoucetDealera < CelkovySoucetHrace) return "Hráè vyhrál!";
+            if (CelkovySoucetDealera > CelkovySoucetHrace) { win = 'N'; return "Dealer vyhrál!"; }
+            else if (CelkovySoucetDealera < CelkovySoucetHrace) { win = 'Y'; return "Hráè vyhrál!"; }
 
-            else if (CelkovySoucetDealera == CelkovySoucetHrace) return "Remíza";
-
-            else return "Chyba";
+            else{ win = 'P'; return "Remíza"; }
         }
 
 
+        private int Vyplaceni(int vsazeno)
+        {
+            clear();
+            VsazenePenize = 0;
+            if (win == 'Y') return vsazeno * 2;
+            if (win == 'N') return 0;
+            if (win == 'P') return vsazeno;
+            if (win == 'B') return vsazeno + ((vsazeno * 3) / 2);
+            else return 0;
+        }
+
+        private void BJcheck()
+        {
+
+            if (RealnaHodnotaHrace == 21 && RealnaHodnotaDealera != 21)
+            {
+                win = 'B';
+                MessageBox.Show("Hráè vyhrává (BJ)");
+                penize += Vyplaceni(VsazenePenize);
+                StavPenez.Text = penize.ToString();
+                Sazka.Text = VsazenePenize.ToString();
+            }
+            else if (RealnaHodnotaHrace == 21 && RealnaHodnotaDealera == 21)
+            {
+                win = 'P';
+                MessageBox.Show("Remíza (Push)");
+                penize += Vyplaceni(VsazenePenize);
+                StavPenez.Text = penize.ToString();
+                Sazka.Text = VsazenePenize.ToString();
+            }
+            else if (RealnaHodnotaDealera == 21)
+            {
+                win = 'N';
+                KartyD.Text += " " + karty[kartaD2];
+                MessageBox.Show("Hráè prohrál (BJ)");
+                penize += Vyplaceni(VsazenePenize);
+                StavPenez.Text = penize.ToString();
+                Sazka.Text = VsazenePenize.ToString();
+            }
+            else
+            {
+                Hit.Enabled = true;
+                Stand.Enabled = true;
+            }
+        }
+
         private void Start_Click(object sender, EventArgs e)
         {
+            if(VsazenePenize <= 0) { MessageBox.Show("Sazka 0"); return; }
+
             kartaD1 = rng.Next(13); // 0 = A; 2-10 = 1-9; 10 = J; 11 = Q; 12 = K
             kartaD2 = rng.Next(13);
             kartaH1 = rng.Next(13);
@@ -89,8 +138,13 @@ namespace BJ_projektT3A
             RealnaHodnotaHrace = AceCheck(RealnaHodnotaKaret(kartaH1) + RealnaHodnotaKaret(kartaH2), ref pocetEsH);
             RealnaHodnotaDealera = AceCheck(RealnaHodnotaKaret(kartaD1) + RealnaHodnotaKaret(kartaD2), ref pocetEsD);
 
-            if (RealnaHodnotaHrace == 21 || RealnaHodnotaDealera == 21) Stand.PerformClick();
-            else { Hit.Enabled = true; Stand.Enabled = true; }
+            BJcheck();
+        }
+
+        private void clear()
+        {
+            KartyD.Text = "0";
+            KartyH.Text = "0";
         }
 
         private void Hit_Click(object sender, EventArgs e)
@@ -107,7 +161,18 @@ namespace BJ_projektT3A
 
             RealnaHodnotaHrace = AceCheck(RealnaHodnotaHrace, ref pocetEsH);
 
-            if (RealnaHodnotaHrace > 21) MessageBox.Show("Hráè prohrál (Bust)");
+            if (RealnaHodnotaHrace > 21)
+            {
+                win = 'N';
+                MessageBox.Show("Hráè prohrál (Bust)");
+                penize += Vyplaceni(VsazenePenize);
+
+                StavPenez.Text = penize.ToString();
+                Sazka.Text = VsazenePenize.ToString();
+
+                Hit.Enabled = false;
+                Stand.Enabled = false;
+            } 
         }
 
         private void Stand_Click(object sender, EventArgs e)
@@ -123,7 +188,7 @@ namespace BJ_projektT3A
 
                 RealnaHodnotaDealera += RealnaHodnotaKaret(kartaD1Hit);
 
-                if (kartaH1Hit == 0) pocetEsD++;
+                if (kartaD1Hit == 0) pocetEsD++;
 
                 RealnaHodnotaDealera = AceCheck(RealnaHodnotaDealera, ref pocetEsD);
 
@@ -132,6 +197,11 @@ namespace BJ_projektT3A
             }
 
             MessageBox.Show(WinCheck(RealnaHodnotaHrace, RealnaHodnotaDealera));
+            penize += Vyplaceni(VsazenePenize);
+
+            StavPenez.Text = penize.ToString();
+            Sazka.Text = VsazenePenize.ToString();
+
             Hit.Enabled = false;
             Stand.Enabled = false;
         }
@@ -141,8 +211,7 @@ namespace BJ_projektT3A
             Application.Exit();
         }
 
-        int penize = 1000;
-        int VsazenePenize = 0;
+
         private void Sazkaplus10_Click(object sender, EventArgs e)
         {
             if(penize > 0)
