@@ -28,6 +28,7 @@ namespace BJ_projektT3A
             InitializeComponent();
             Hit.Enabled = false;
             Stand.Enabled = false;
+            Double.Enabled = false;
         }
 
 
@@ -57,17 +58,18 @@ namespace BJ_projektT3A
         }
         private string WinCheck(int CelkovySoucetHrace, int CelkovySoucetDealera)
         {
-            if (CelkovySoucetDealera > 21) {win = 'Y'; return "Dealer prohrál (bust)"; }
+            if (CelkovySoucetDealera > 21) { win = 'Y'; return "Dealer prohrál (bust)"; }
 
             if (CelkovySoucetDealera > CelkovySoucetHrace) { win = 'N'; return "Dealer vyhrál!"; }
             else if (CelkovySoucetDealera < CelkovySoucetHrace) { win = 'Y'; return "Hráè vyhrál!"; }
 
-            else{ win = 'P'; return "Remíza"; }
+            else { win = 'P'; return "Remíza"; }
         }
-
-
         private int Vyplaceni(int vsazeno)
         {
+            Sazkaminus10.Enabled = true;
+            Sazkaplus10.Enabled = true;
+
             clear();
             VsazenePenize = 0;
             if (win == 'Y') return vsazeno * 2;
@@ -76,7 +78,6 @@ namespace BJ_projektT3A
             if (win == 'B') return vsazeno + ((vsazeno * 3) / 2);
             else return 0;
         }
-
         private void BJcheck()
         {
 
@@ -109,12 +110,15 @@ namespace BJ_projektT3A
             {
                 Hit.Enabled = true;
                 Stand.Enabled = true;
+                Double.Enabled = true;
             }
         }
-
         private void Start_Click(object sender, EventArgs e)
         {
-            if(VsazenePenize <= 0) { MessageBox.Show("Sazka 0"); return; }
+            if (VsazenePenize <= 0) { MessageBox.Show("Sazka 0"); return; }
+
+            Sazkaminus10.Enabled = false;
+            Sazkaplus10.Enabled = false;
 
             kartaD1 = rng.Next(13); // 0 = A; 2-10 = 1-9; 10 = J; 11 = Q; 12 = K
             kartaD2 = rng.Next(13);
@@ -140,15 +144,14 @@ namespace BJ_projektT3A
 
             BJcheck();
         }
-
         private void clear()
         {
             KartyD.Text = "0";
             KartyH.Text = "0";
         }
-
         private void Hit_Click(object sender, EventArgs e)
         {
+            Double.Enabled = false;
 
             kartaH1Hit = 0;
             kartaH1Hit = rng.Next(13);
@@ -172,11 +175,16 @@ namespace BJ_projektT3A
 
                 Hit.Enabled = false;
                 Stand.Enabled = false;
-            } 
-        }
+            }
 
+            if (RealnaHodnotaHrace == 21) Stand.PerformClick();
+        }
         private void Stand_Click(object sender, EventArgs e)
         {
+            Double.Enabled = false;
+            Hit.Enabled = false;
+            Stand.Enabled = false;
+
             KartyD.Text += " " + karty[kartaD2];
 
             while (RealnaHodnotaDealera < 17)
@@ -202,19 +210,14 @@ namespace BJ_projektT3A
             StavPenez.Text = penize.ToString();
             Sazka.Text = VsazenePenize.ToString();
 
-            Hit.Enabled = false;
-            Stand.Enabled = false;
         }
-
         private void Stop_Click(object sender, EventArgs e)
         {
             Application.Exit();
         }
-
-
         private void Sazkaplus10_Click(object sender, EventArgs e)
         {
-            if(penize > 0)
+            if (penize > 0)
             {
                 penize -= 10;
                 StavPenez.Text = penize.ToString();
@@ -228,7 +231,6 @@ namespace BJ_projektT3A
             }
 
         }
-
         private void Sazkaminus10_Click(object sender, EventArgs e)
         {
             if (VsazenePenize > 0)
@@ -242,6 +244,54 @@ namespace BJ_projektT3A
             else
             {
                 MessageBox.Show("Vsazeno 0");
+            }
+        }
+        private void Double_Click(object sender, EventArgs e)
+        {
+            if(penize>= VsazenePenize)
+            {
+                penize -= VsazenePenize;
+                VsazenePenize *= 2;
+
+                StavPenez.Text = penize.ToString();
+                Sazka.Text = VsazenePenize.ToString();
+
+                kartaH1Hit = 0;
+                kartaH1Hit = rng.Next(13);
+
+                KartyH.Text += " " + karty[kartaH1Hit];
+
+                RealnaHodnotaHrace += RealnaHodnotaKaret(kartaH1Hit);
+
+                if (kartaH1Hit == 0) pocetEsH++;
+
+                RealnaHodnotaHrace = AceCheck(RealnaHodnotaHrace, ref pocetEsH);
+
+                Hit.Enabled = false;
+                Double.Enabled = false;
+
+                if (RealnaHodnotaHrace > 21)
+                {
+                    win = 'N';
+                    MessageBox.Show("Hráè prohrál (Bust)");
+                    penize += Vyplaceni(VsazenePenize);
+
+                    StavPenez.Text = penize.ToString();
+                    Sazka.Text = VsazenePenize.ToString();
+
+                    Hit.Enabled = false;
+                    Stand.Enabled = false;
+                }
+                else{
+                    Stand.PerformClick();
+                    Stand.Enabled = false;
+                }
+
+
+            }
+            else
+            {
+                MessageBox.Show("Nedostatek financí na double!");
             }
         }
     }

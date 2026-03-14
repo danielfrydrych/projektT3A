@@ -38,6 +38,7 @@
             Sazkaplus10 = new Button();
             Sazkaminus10 = new Button();
             StavPenez = new Label();
+            Double = new Button();
             SuspendLayout();
             // 
             // Hit
@@ -100,11 +101,10 @@
             // 
             // Sazka
             // 
-            Sazka.AutoSize = true;
-            Sazka.Location = new Point(357, 162);
+            Sazka.Location = new Point(357, 166);
             Sazka.Name = "Sazka";
-            Sazka.Size = new Size(13, 15);
-            Sazka.TabIndex = 7;
+            Sazka.Size = new Size(35, 23);
+            Sazka.TabIndex = 12;
             Sazka.Text = "0";
             // 
             // Sazkaplus10
@@ -136,11 +136,22 @@
             StavPenez.TabIndex = 10;
             StavPenez.Text = "1000";
             // 
+            // Double
+            // 
+            Double.Location = new Point(153, 218);
+            Double.Name = "Double";
+            Double.Size = new Size(57, 38);
+            Double.TabIndex = 11;
+            Double.Text = "Double";
+            Double.UseVisualStyleBackColor = true;
+            Double.Click += Double_Click;
+            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(800, 450);
+            Controls.Add(Double);
             Controls.Add(StavPenez);
             Controls.Add(Sazkaminus10);
             Controls.Add(Sazkaplus10);
@@ -169,5 +180,6 @@
         private Button Sazkaplus10;
         private Button Sazkaminus10;
         private Label StavPenez;
+        private Button Double;
     }
 }
